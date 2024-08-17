@@ -3,6 +3,7 @@ import unittest
 from collections import defaultdict
 
 
+# Solution 1: Track Character Occurrences Using Array
 def is_unique_1(s: str) -> bool:
     if len(s) > 128:
         return False
@@ -12,10 +13,54 @@ def is_unique_1(s: str) -> bool:
         if occur[ord(c)]:
             return False
         occur[ord(c)] = True
-
     return True
 
 
+# Solution 2: Track Character Occurrences Using Bit Vector
+def is_unique_2(s: str) -> bool:
+    if len(s) > 128:
+        return False
+
+    occur = 0
+    for c in s:
+        mask = 1 << ord(c)
+        if occur & mask:
+            return False
+        occur |= mask
+    return True
+
+
+# Solution 3: Hash Characters Using Dictionary
+def is_unique_3(s: str) -> bool:
+    occur = {}
+    for c in s:
+        if c in occur:
+            return False
+        occur[c] = True
+    return True
+
+
+# Solution 4: Remove Duplicate Characters Using Set
+def is_unique_4(s: str) -> bool:
+    occur = set()
+    for c in s:
+        if c in occur:
+            return False
+        occur.add(c)
+    return True
+
+
+# Solution 5: Sort Characters
+def is_unique_5(s: str) -> bool:
+    last = None
+    for c in sorted(s):
+        if c == last:
+            return False
+        last = c
+    return True
+
+
+# Solution 6: Pythonic Way
 def is_unique_pythonic(s: str) -> bool:
     return len(set(s)) == len(s)
 
@@ -32,6 +77,10 @@ class Test(unittest.TestCase):
     ]
     test_functions = [
         is_unique_1,
+        is_unique_2,
+        is_unique_3,
+        is_unique_4,
+        is_unique_5,
         is_unique_pythonic
     ]
 
