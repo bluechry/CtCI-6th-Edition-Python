@@ -7,17 +7,17 @@ def is_unique_1(s: str) -> bool:
     if len(s) > 128:
         return False
 
-    arr = [False] * 128
+    occur = [False] * 128
     for c in s:
-        if arr[ord(c)]:
+        if occur[ord(c)]:
             return False
-        arr[ord(c)] = True
+        occur[ord(c)] = True
 
     return True
 
 
 def is_unique_pythonic(s: str) -> bool:
-    return len(set(s)) == len(list(s))
+    return len(set(s)) == len(s)
 
 
 class Test(unittest.TestCase):
