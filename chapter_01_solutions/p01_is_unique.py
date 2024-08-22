@@ -3,79 +3,66 @@ import unittest
 from collections import defaultdict
 
 
-def is_unique_chars_algorithmic(string):
-    # Assuming character set is ASCII (128 characters)
-    if len(string) > 128:
+# Solution 1: Track Character Occurrences Using Array
+def is_unique_1(s: str) -> bool:
+    if len(s) > 128:
         return False
 
-    # this is a pythonic and faster way to initialize an array with a fixed value.
-    #  careful though it won't work for a doubly nested array
-    char_set = [False] * 128
-    for char in string:
-        val = ord(char)
-        if char_set[val]:
-            # Char already found in string
+    occur = [False] * 128
+    for c in s:
+        if occur[ord(c)]:
             return False
-        char_set[val] = True
-
+        occur[ord(c)] = True
     return True
 
 
-def is_unique_chars_pythonic(string):
-    return len(set(string)) == len(string)
-
-
-def is_unique_bit_vector(string):
-    """Uses bitwise operation instead of extra data structures."""
-    # Assuming character set is ASCII (128 characters)
-    if len(string) > 128:
+# Solution 2: Track Character Occurrences Using Bit Vector
+def is_unique_2(s: str) -> bool:
+    if len(s) > 128:
         return False
 
-    checker = 0
-    for c in string:
-        val = ord(c)
-        if (checker & (1 << val)) > 0:
+    occur = 0
+    for c in s:
+        mask = 1 << ord(c)
+        if occur & mask:
             return False
-        checker |= 1 << val
+        occur |= mask
     return True
 
 
-def is_unique_chars_using_dictionary(string: str) -> bool:
-    character_counts = {}
-    for char in string:
-        if char in character_counts:
+# Solution 3: Hash Characters Using Dictionary
+def is_unique_3(s: str) -> bool:
+    occur = {}
+    for c in s:
+        if c in occur:
             return False
-        character_counts[char] = 1
+        occur[c] = True
     return True
 
 
-def is_unique_chars_using_set(string: str) -> bool:
-    characters_seen = set()
-    for char in string:
-        if char in characters_seen:
+# Solution 4: Remove Duplicate Characters Using Set
+def is_unique_4(s: str) -> bool:
+    occur = set()
+    for c in s:
+        if c in occur:
             return False
-        characters_seen.add(char)
+        occur.add(c)
     return True
 
 
-# O(NlogN)
-def is_unique_chars_sorting(string: str) -> bool:
-    sorted_string = sorted(string)
-    last_character = None
-    for char in sorted_string:
-        if char == last_character:
+# Solution 5: Sort Characters
+def is_unique_5(s: str) -> bool:
+    last = None
+    for c in sorted(s):
+        if c == last:
             return False
-        last_character = char
+        last = c
     return True
 
 
-# Sorting without extra variable. TC: O(NlogN) SC: O(1) Con: Modifies input string
-def is_unique_chars_sort(string: str) -> bool:
-    string = sorted(string)
-    for i in range(len(string) - 1):
-        if string[i] == string[i + 1]:
-            return False
-    return True
+# Solution 6: Pythonic Way
+def is_unique_pythonic(s: str) -> bool:
+    return len(set(s)) == len(s)
 
 
 class Test(unittest.TestCase):
@@ -89,13 +76,12 @@ class Test(unittest.TestCase):
         ("".join([chr(val // 2) for val in range(129)]), False),  # non-unique 129 chars
     ]
     test_functions = [
-        is_unique_chars_pythonic,
-        is_unique_chars_algorithmic,
-        is_unique_bit_vector,
-        is_unique_chars_using_dictionary,
-        is_unique_chars_using_set,
-        is_unique_chars_sorting,
-        is_unique_chars_sort,
+        is_unique_1,
+        is_unique_2,
+        is_unique_3,
+        is_unique_4,
+        is_unique_5,
+        is_unique_pythonic
     ]
 
     def test_is_unique_chars(self):
